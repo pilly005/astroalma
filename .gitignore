@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Env — NEVER commit real keys (fresh ZIPs lose this file by design;
+# the build fails loudly if keys are missing — see vite.config.ts)
+.env
+.env.local
+.env.*.local
+
+# Capacitor (regenerated via `npx cap add ios` / `npx cap sync`)
+# NOTE: ios/ IS committed for this project so the iOS 15.0 deployment
+# target and native config ship in the ZIP. Uncomment the next line only
+# if you prefer generating ios/ on the build machine instead.
+# ios/
+
+# OS / editors
+.DS_Store
+*.log
+.vscode/
+.idea/

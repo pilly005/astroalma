@@ -1,0 +1,13 @@
+{
+	"appId": "com.astroalma.app",
+	"appName": "AstroAlma",
+	"webDir": "dist",
+	"ios": {
+		"limitsNavigationsToAppBoundDomains": true
+	},
+	"packageClassList": [
+		"FilesystemPlugin",
+		"SharePlugin",
+		"PurchasesPlugin"
+	]
+}
