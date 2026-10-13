@@ -41,8 +41,10 @@ export async function getOfferings() {
   if (!Capacitor.isNativePlatform()) return [];
   try {
     const { current } = await Purchases.getOfferings();
+    console.log("[revenuecat] offerings current:", current?.identifier, "packages:", current?.availablePackages?.length ?? 0);
     return current?.availablePackages ?? [];
-  } catch {
+  } catch (e) {
+    console.warn("[revenuecat] getOfferings failed", e);
     return [];
   }
 }

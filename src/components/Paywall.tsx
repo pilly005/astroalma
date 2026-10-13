@@ -11,10 +11,23 @@ interface Props {
 export default function Paywall({ onClose, onPurchased }: Props) {
   const [loading, setLoading] = useState(false);
   const [offerings, setOfferings] = useState<unknown[]>([]);
+  const [offeringsError, setOfferingsError] = useState(false);
   const isNative = Capacitor.isNativePlatform();
 
+  const loadOfferings = () => {
+    setOfferingsError(false);
+    getOfferings()
+      .then((pkgs) => {
+        setOfferings(pkgs);
+        if (isNative && pkgs.length === 0) setOfferingsError(true);
+      })
+      .catch(() => {
+        if (isNative) setOfferingsError(true);
+      });
+  };
+
   useEffect(() => {
-    getOfferings().then(setOfferings);
+    loadOfferings();
   }, []);
 
   const buy = async (pkg: unknown, label: string) => {
@@ -68,6 +81,15 @@ export default function Paywall({ onClose, onPurchased }: Props) {
                 <span className="text-cosmos-gold font-display text-xl">{pkg.product.priceString}</span>
               </button>
             ))}
+          </div>
+        ) : isNative && offeringsError ? (
+          <div className="mb-4 p-4 card text-center">
+            <p className="text-cosmos-cream text-sm mb-3">
+              No se pudieron cargar los planes. Revisa tu conexión e inténtalo de nuevo.
+            </p>
+            <button onClick={loadOfferings} className="text-cosmos-gold underline text-sm">
+              Reintentar
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3 mb-4">
