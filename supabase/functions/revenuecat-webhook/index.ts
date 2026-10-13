@@ -23,6 +23,14 @@ Deno.serve(async (req) => {
 
   if (!appUserId) return Response.json({ ok: true, skipped: "no app_user_id" });
 
+  // v1 has no Supabase Auth — the app uses anonymous RevenueCat IDs.
+  // Only mirror when the app user ID is a real auth UUID; skip quietly otherwise
+  // instead of failing the UUID insert.
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  if (!UUID_RE.test(appUserId)) {
+    return Response.json({ ok: true, skipped: "anonymous app_user_id" });
+  }
+
   const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
   const active = entitlementIds.includes("premium");
   const status = active ? "active"
